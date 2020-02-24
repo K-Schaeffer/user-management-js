@@ -1,15 +1,16 @@
 var fields = document.querySelectorAll("#form-user-create [name]");
+var user = {}; // My JSON
 
 fields.forEach(function (field, index) {
 
     if (field.name == "gender") {
         if (field.checked) {
-            console.log("Sim", field);
+            user[field.name] = field.value; //Name of the JSON property / Value of it
         }
     } else {
-        console.log("Não");
+        user[field.name] = field.value;
     }
 
-    //console.log(field.id, field.name, field.value, field.checked, index);
+});
 
-})
+console.log(user);
