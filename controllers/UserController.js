@@ -14,11 +14,43 @@ class UserController {
 
             event.preventDefault(); //Canceling the default comportament
 
-            this.addLine(this.getValues());
+            let values = this.getValues();
+            
+            values.photo = "";
+
+            this.getPhoto((content)=>{
+                values.photo = content;
+                this.addLine(values);
+            });
 
         });
 
     } //Closing onSubmit()
+
+    getPhoto(callback){
+
+        let fileReader = new FileReader();
+
+        let elements = [...this.formEl.elements].filter(item=>{ // filter each item
+
+            if(item.name==='photo'){ // if this item is a photo, so, return
+                return item;
+            }
+
+        })
+
+        let file = elements[0].files[0]; // Only one file
+
+        fileReader.onload = () => {
+
+            fileReader.result;
+            callback(fileReader.result);
+        };
+
+        fileReader.readAsDataURL(file);
+
+
+    }
 
     getValues() {
 
@@ -56,7 +88,7 @@ class UserController {
 
         this.tableEl.innerHTML = `
         <tr>
-            <td><img src="dist/img/user1-128x128.jpg" alt="User Image" class="img-circle img-sm"></td>
+            <td><img src="${dataUser.photo}" alt="User Image" class="img-circle img-sm"></td>
             <td>${dataUser.name}</td>
             <td>${dataUser.email}</td>
             <td>${dataUser.admin}</td>
