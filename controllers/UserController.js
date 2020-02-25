@@ -29,7 +29,7 @@ class UserController {
                 (content) => { // If everything went good, then...
                     values.photo = content;
 
-                    this.insertSO(values); //Insert in sessionStorage
+                    this.insert(values); //Insert in sessionStorage
 
                     this.addLine(values);
 
@@ -187,9 +187,9 @@ class UserController {
 
         let users = []; // Array of users
 
-        if (sessionStorage.getItem("users")) { // Is there any user?
+        if (localStorage.getItem("users")) { // Is there any user?
 
-            users = JSON.parse(sessionStorage.getItem("users")); // Yes? So convert it
+            users = JSON.parse(localStorage.getItem("users")); // Yes? So convert it
 
         }
 
@@ -214,15 +214,16 @@ class UserController {
 
     } // Closing selectAll()
 
-    insertSO(data) {
+    insert(data) {
 
        let users = this.getUsersStorage();
 
         users.push(data);
 
-        sessionStorage.setItem("users", JSON.stringify(users));
+        // sessionStorage.setItem("users", JSON.stringify(users)); 
+        localStorage.setItem("users", JSON.stringify(users)); 
 
-    } // Closing insertSO()
+    } // Closing insert()
 
     addLine(dataUser) {
 
