@@ -2,6 +2,7 @@ class User {
 
     constructor(name, gender, birth, country, email, password, photo, admin) {
 
+        this._id;
         this._name = name;
         this._gender = gender;
         this._birth = birth;
@@ -12,6 +13,14 @@ class User {
         this._admin = admin;
         this._register = new Date();
 
+    }
+
+    get id() {
+        return this._id;
+    }
+
+    set id(value) {
+        this._id = value;
     }
 
     get name() {
@@ -89,5 +98,63 @@ class User {
         }
 
     }
+
+    static getUsersStorage() {
+        let users = []; // Array of users
+
+        if (localStorage.getItem("users")) { // Is there any user?
+
+            users = JSON.parse(localStorage.getItem("users")); // Yes? So convert it
+
+        }
+
+        return users;
+
+    }
+
+    getNewId() {
+
+        if (!window.id) window.id = 0;
+
+        id++;
+
+        return id;
+
+    }
+
+    save() {
+
+        let users = User.getUsersStorage(); // Taking all users
+
+        if (this.id > 0) { // Is there any id? (Editing)
+
+            users.map(u => { // Looking for the data I want to replace
+
+                if (u._id == this.id) { // Replacing
+
+                    Object.assign(u, this);
+
+                }
+
+                return u;
+
+            })
+
+        } else { // Creating
+
+            this.id = this.getNewId();
+
+            users.push(this);
+
+        }
+
+        localStorage.setItem("users", JSON.stringify(users));
+
+
+    }
+
+
+
+
 
 }

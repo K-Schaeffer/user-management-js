@@ -29,8 +29,8 @@ class UserController {
                 (content) => { // If everything went good, then...
                     values.photo = content;
 
-                    this.insert(values); //Insert in sessionStorage
-
+                    values.save();
+                
                     this.addLine(values);
 
                     this.formEl.reset();
@@ -80,6 +80,8 @@ class UserController {
                     let user = new User();
 
                     user.loadFromJSON(result);
+
+                    user.save();
 
                     this.getTr(user, tr);
 
@@ -204,17 +206,6 @@ class UserController {
 
 
     } // Closing selectAll()
-
-    insert(data) {
-
-        let users = this.getUsersStorage();
-
-        users.push(data);
-
-        // sessionStorage.setItem("users", JSON.stringify(users)); 
-        localStorage.setItem("users", JSON.stringify(users));
-
-    } // Closing insert()
 
     addLine(dataUser) {
 
