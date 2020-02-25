@@ -20,7 +20,7 @@ class UserController {
 
             let values = this.getValues();
 
-            if(!values) return false;
+            if (!values) return false;
 
             this.getPhoto().then(
                 (content) => { // If everything went good, then...
@@ -99,8 +99,8 @@ class UserController {
 
         });
 
-        if (!isValid){
-            return false;    
+        if (!isValid) {
+            return false;
         }
 
         return new User( // Instead of returning a JSON, I'm returning a user object
@@ -121,7 +121,8 @@ class UserController {
 
         let tr = document.createElement('tr');
 
-        tr.innerHTML;;
+        //using a dataset called user
+        tr.dataset.user = JSON.stringify(dataUser); //Converting object to a JSON string
 
         tr.innerHTML = `
             <td><img src="${dataUser.photo}" alt="User Image" class="img-circle img-sm"></td>
@@ -135,7 +136,32 @@ class UserController {
             </td>
     `;
 
-        this.tableEl.appendChild(tr); //Adding a chield to the current element
+        this.tableEl.appendChild(tr); //Adding a child to the current element
+
+        this.updateCount();
+
 
     } //Closing addLine()
+
+    updateCount() {
+
+        let numberUsers = 0;
+        let numberAdmins = 0;
+
+        [...this.tableEl.children].forEach(tr => { //Converting colection to array and using spread
+
+            numberUsers++;
+
+            let user = JSON.parse(tr.dataset.user);
+
+            if (user._admin) numberAdmins++; // I call the private one because It's inside of the JSON,
+            // and not in a instance of my obj
+
+        });
+
+        document.querySelector("#number-users").innerHTML = numberUsers;
+        document.querySelector("#number-users-admin").innerHTML = numberAdmins;
+
+
+    }
 }
