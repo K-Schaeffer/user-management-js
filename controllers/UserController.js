@@ -77,21 +77,12 @@ class UserController {
                         result._photo = content; // New photo
                     }
 
-                    tr.dataset.user = JSON.stringify(result); // Converting to string
+                    let user = new User();
 
-                    tr.innerHTML = `
-                    <td><img src="${result._photo}" alt="User Image" class="img-circle img-sm"></td>
-                    <td>${result._name}</td>
-                    <td>${result._email}</td>
-                    <td>${(result._admin) ? 'Sim' : 'Não'}</td>
-                    <td>${Utils.dateFormat(result._register)}</td>
-                    <td>
-                        <button type="button" class="btn btn-primary btn-edit btn-xs btn-flat">Editar</button>
-                        <button type="button" class="btn btn-danger btn-xs btn-flat">Excluir</button>
-                    </td>
-                     `;
+                    user.loadFromJSON(result);
 
-                    this.addEventsTR(tr);
+                    this.getTr(user, tr);
+
                     this.updateCount();
                     this.formUpdateEl.reset();
                     btn.disabled = false;
@@ -216,18 +207,29 @@ class UserController {
 
     insert(data) {
 
-       let users = this.getUsersStorage();
+        let users = this.getUsersStorage();
 
         users.push(data);
 
         // sessionStorage.setItem("users", JSON.stringify(users)); 
-        localStorage.setItem("users", JSON.stringify(users)); 
+        localStorage.setItem("users", JSON.stringify(users));
 
     } // Closing insert()
 
     addLine(dataUser) {
 
-        let tr = document.createElement('tr');
+        let tr = this.getTr(dataUser);
+
+        this.tableEl.appendChild(tr); //Adding a child to the current element
+
+        this.updateCount();
+
+
+    } //Closing addLine()
+
+    getTr(dataUser, tr = null) { // TR is optional
+
+        if (tr === null) tr = document.createElement('tr');
 
         //using a dataset called user
         tr.dataset.user = JSON.stringify(dataUser); //Converting object to a JSON string
@@ -246,13 +248,9 @@ class UserController {
 
         this.addEventsTR(tr);
 
-        this.tableEl.appendChild(tr); //Adding a child to the current element
+        return tr;
 
-        this.updateCount();
-
-
-    } //Closing addLine()
-
+    } // Closing getTr()
 
     addEventsTR(tr) {
 
