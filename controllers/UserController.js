@@ -7,6 +7,7 @@ class UserController {
 
         this.onSubmit();
         this.onEdit();
+        this.selectAll();
 
     } //Closing constructor
 
@@ -27,6 +28,9 @@ class UserController {
             this.getPhoto(this.formEl).then(
                 (content) => { // If everything went good, then...
                     values.photo = content;
+
+                    this.insertSO(values); //Insert in sessionStorage
+
                     this.addLine(values);
 
                     this.formEl.reset();
@@ -179,6 +183,46 @@ class UserController {
 
     } //Closing getValues()
 
+    getUsersStorage() {
+
+        let users = []; // Array of users
+
+        if (sessionStorage.getItem("users")) { // Is there any user?
+
+            users = JSON.parse(sessionStorage.getItem("users")); // Yes? So convert it
+
+        }
+
+        return users;
+
+    } // Closing getUsersStorage()
+
+    selectAll() {
+
+        let users = this.getUsersStorage();
+
+        users.forEach(dataUser => {
+
+            let user = new User();
+
+            user.loadFromJSON(dataUser);
+
+            this.addLine(user);
+
+        });
+
+
+    } // Closing selectAll()
+
+    insertSO(data) {
+
+       let users = this.getUsersStorage();
+
+        users.push(data);
+
+        sessionStorage.setItem("users", JSON.stringify(users));
+
+    } // Closing insertSO()
 
     addLine(dataUser) {
 

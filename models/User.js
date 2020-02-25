@@ -18,7 +18,7 @@ class User {
         return this._name;
     }
 
-    set name(value){
+    set name(value) {
         this._name = value;
     }
 
@@ -26,7 +26,7 @@ class User {
         return this._gender;
     }
 
-    set gender(value){
+    set gender(value) {
         this._gender = value;
     }
 
@@ -34,7 +34,7 @@ class User {
         return this._birth;
     }
 
-    set birth(value){
+    set birth(value) {
         this._birth = value;
     }
 
@@ -42,7 +42,7 @@ class User {
         return this._country;
     }
 
-    set country(value){
+    set country(value) {
         this._country = value;
     }
 
@@ -50,7 +50,7 @@ class User {
         return this._email;
     }
 
-    set email(value){
+    set email(value) {
         this._email = value;
     }
 
@@ -62,7 +62,7 @@ class User {
         return this._photo;
     }
 
-    set photo(value){
+    set photo(value) {
         this._photo = value;
     }
 
@@ -70,8 +70,24 @@ class User {
         return this._admin;
     }
 
-    get register(){
+    get register() {
         return this._register;
+    }
+
+    loadFromJSON(json) {
+
+        for (let name in json) {
+
+            switch (name) {
+                case '_register':
+                    this[name] = new Date(json[name]);
+                    break;
+                default:
+                    this[name] = json[name];
+            }
+
+        }
+
     }
 
 }
