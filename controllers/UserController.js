@@ -14,7 +14,7 @@ class UserController {
 
             event.preventDefault(); //Canceling the default comportament
 
-            let btn =  this.formEl.querySelector("[type=submit]");
+            let btn = this.formEl.querySelector("[type=submit]");
 
             btn.disabled = true;
 
@@ -24,9 +24,9 @@ class UserController {
                 (content) => { // If everything went good, then...
                     values.photo = content;
                     this.addLine(values);
-                   
+
                     this.formEl.reset();
-                   
+
                     btn.disabled = false;
                 },
                 (e) => { // If something went wrong, then...
@@ -75,8 +75,15 @@ class UserController {
     getValues() {
 
         let user = {};
+        let isValid = true;
 
         [...this.formEl.elements].forEach(function (field, index) { //Converting to array and using spread
+
+            if (['name', 'email', 'password'].indexOf(field.name) > -1 && !field.value) { //Searching for name, email and password in the array
+
+                field.parentElement.classList.add('has-error'); //Calling the parentElement and using the classList colection
+                isValid = false;
+            }
 
             if (field.name == "gender") {
                 if (field.checked) {
@@ -89,6 +96,10 @@ class UserController {
             }
 
         });
+
+        if (!isValid){
+            return false;    
+        }
 
         return new User( // Instead of returning a JSON, I'm returning a user object
             user.name,
