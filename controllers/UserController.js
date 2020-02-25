@@ -20,6 +20,8 @@ class UserController {
 
             let values = this.getValues();
 
+            if(!values) return false;
+
             this.getPhoto().then(
                 (content) => { // If everything went good, then...
                     values.photo = content;
