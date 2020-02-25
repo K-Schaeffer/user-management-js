@@ -15,48 +15,56 @@ class UserController {
             event.preventDefault(); //Canceling the default comportament
 
             let values = this.getValues();
-            
-            values.photo = "";
 
-            this.getPhoto((content)=>{
-                values.photo = content;
-                this.addLine(values);
-            });
-
+            this.getPhoto().then(
+                (content) => { // If everything went good, then...
+                    values.photo = content;
+                    this.addLine(values);
+                },
+                (e) => { // If something went wrong, then...
+                    console.error(e);
+                });
         });
 
     } //Closing onSubmit()
 
-    getPhoto(callback){
+    getPhoto() {
 
-        let fileReader = new FileReader();
+        return new Promise((resolve, reject) => {
 
-        let elements = [...this.formEl.elements].filter(item=>{ // filter each item
+            let fileReader = new FileReader();
 
-            if(item.name==='photo'){ // if this item is a photo, so, return
-                return item;
-            }
+            let elements = [...this.formEl.elements].filter(item => { // filter each item
 
-        })
+                if (item.name === 'photo') { // if this item is a photo, so, return
+                    return item;
+                }
 
-        let file = elements[0].files[0]; // Only one file
+            });
 
-        fileReader.onload = () => {
+            let file = elements[0].files[0]; // Only one file
 
-            fileReader.result;
-            callback(fileReader.result);
-        };
+            fileReader.onload = () => { //onload is the callback, it will run after the upload
 
-        fileReader.readAsDataURL(file);
+                fileReader.result;
+                resolve(fileReader.result); //it will send the resolve
+            };
 
+            fileReader.onerror = () => {
+                reject(e); //In case of error it will send the reject
+            };
 
-    }
+            fileReader.readAsDataURL(file);
+
+        });
+
+    } //Closing getPhoto()
 
     getValues() {
 
         let user = {};
 
-       [...this.formEl.elements].forEach(function (field, index) { //Converting to array and using spread
+        [...this.formEl.elements].forEach(function (field, index) { //Converting to array and using spread
 
             if (field.name == "gender") {
                 if (field.checked) {
